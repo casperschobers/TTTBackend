@@ -20,6 +20,6 @@ class PlayerController extends Controller
            $player->save();
            return response()->json(["id" => $player->id, "name" => $player->name]);
        }
-       return response()->json(["message" => 'Game is gestopt wacht totdat de nieuwe game begint!'], 412);
+       return response()->json(["message" => 'De game is op dit moment gestopt. Wacht totdat een nieuwe game begint!'], 412);
    }
 }

@@ -42,16 +42,18 @@ class GameController extends Controller
     public function postFound(Request $request)
     {
         $targetid = explode("-", $request->qr);
-        if (isset($targetid[1])) {
-            $target = Target::where("qrId", $targetid[1])->first();
+        if (isset($targetid[1]) && isset($request->imageURL)) {
+            $matchThese = ["qrId" => $targetid[1], "imageurl" => $request->imageURL];
+            $target = Target::where($matchThese)->first();
             if (isset($target)) {
                 $game = Game::find(1);
                 $game->status = 'found-' . Carbon::now()->timestamp;
                 $game->save();
                 return response()->json(["status" => $game->status, "url" => $this->getRandomTarget($target)]);
             }
+            return response()->json(["message" => "Kijk nou eens goed dit lijkt toch niet op het plaatje!"], 404);
         }
-        return response()->json(["message" => "QR-Code niet bekend"], 404);
+        return response()->json(["message" => "WTF heb jij nou gescand"], 404);
     }
 
     public function getStatus()

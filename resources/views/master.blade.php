@@ -52,6 +52,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{URL::to('/')}}">Home</a></li>
                 <li><a href="{{URL::to('/game')}}">Game</a></li>
+                <li><a href="{{URL::to('/target')}}">Target</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -62,6 +63,5 @@
 </div> <!-- /container -->
 </body>
 </html>
-
 
 

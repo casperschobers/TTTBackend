@@ -12,11 +12,15 @@ use App\Http\Requests;
 
 class PlayerController extends Controller
 {
-   public function postNumber(){
+   public function postNumber(Request $request){
        $game = Game::find(1);
        if($game->status != 'ended') {
            $player = new Player();
-           $player->name = "player" . Carbon::now()->timestamp;
+           if(isset($request->name)){
+               $player->name = $request->name;
+           }else {
+               $player->name = "player" . Carbon::now()->timestamp;
+           }
            $player->number = 1;
            $player->save();
            $newTarget = Target::inRandomOrder()->first();

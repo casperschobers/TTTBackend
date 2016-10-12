@@ -17,9 +17,9 @@ class GameController extends Controller
     {
         $game = Game::find(1);
         if ($game->status == 'ended') {
-            return view('startGame');
+            return view('startGame')->with('players', Player::all());
         }
-        return view('endGame');
+        return view('endGame')->with('players', Player::all());
     }
 
     public function postStart()
@@ -27,6 +27,7 @@ class GameController extends Controller
         $game = Game::find(1);
         $game->status = 'ready';
         $game->save();
+        Player::truncate();
         return redirect('game');
     }
 
@@ -35,7 +36,6 @@ class GameController extends Controller
         $game = Game::find(1);
         $game->status = 'ended';
         $game->save();
-        Player::truncate();
         return redirect('game');
     }
 
@@ -46,6 +46,11 @@ class GameController extends Controller
             $matchThese = ["qrId" => $targetid[1], "imageurl" => $request->imageURL];
             $target = Target::where($matchThese)->first();
             if (isset($target)) {
+                $player = Player::find($request->id);
+                error_log($player->score);
+                $player->score = $player->score + 1;
+                error_log($player->score);
+                $player->save();
                 $game = Game::find(1);
                 $game->status = 'found-' . Carbon::now()->timestamp;
                 $game->save();

@@ -17,9 +17,9 @@ class GameController extends Controller
     {
         $game = Game::find(1);
         if ($game->status == 'ended') {
-            return view('startGame')->with('players', Player::all());
+            return view('startGame')->with('players', Player::orderBy('score', 'desc')->get());
         }
-        return view('endGame')->with('players', Player::all());
+        return view('endGame')->with('players', Player::orderBy('score', 'desc')->get());
     }
 
     public function postStart()
@@ -64,6 +64,7 @@ class GameController extends Controller
     public function getStatus()
     {
         $game = Game::find(1);
+        error_log($game->status);
         return response()->json(["status" => $game->status]);
     }
 

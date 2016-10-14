@@ -41,30 +41,34 @@ class GameController extends Controller
 
     public function postFound(Request $request)
     {
-        $targetid = explode("-", $request->qr);
-        if (isset($targetid[1]) && isset($request->imageURL)) {
-            $matchThese = ["qrId" => $targetid[1], "imageurl" => $request->imageURL];
-            $target = Target::where($matchThese)->first();
-            if (isset($target)) {
-                $player = Player::find($request->id);
-                error_log($player->score);
-                $player->score = $player->score + 1;
-                error_log($player->score);
-                $player->save();
-                $game = Game::find(1);
-                $game->status = 'found-' . Carbon::now()->timestamp;
-                $game->save();
-                return response()->json(["status" => $game->status, "url" => $this->getRandomTarget($target)]);
+        $game = Game::find(1);
+        if($game->status != "ended") {
+            $targetid = explode("-", $request->qr);
+            if (isset($targetid[1]) && isset($request->imageURL)) {
+                $matchThese = ["qrId" => $targetid[1], "imageurl" => $request->imageURL];
+                $target = Target::where($matchThese)->first();
+                if (isset($target)) {
+                    $player = Player::find($request->id);
+                    //error_log($player->score);
+                    $player->score = $player->score + 1;
+                    //error_log($player->score);
+                    $player->save();
+
+                    $game->status = 'found-' . Carbon::now()->timestamp;
+                    $game->save();
+                    return response()->json(["status" => $game->status, "url" => $this->getRandomTarget($target)]);
+                }
+                return response()->json(["message" => "Kijk nou eens goed... dit lijkt toch niet op het plaatje?!"], 404);
             }
-            return response()->json(["message" => "Kijk nou eens goed dit lijkt toch niet op het plaatje!"], 404);
+            return response()->json(["message" => "Wat heb jij nou weer gescand?"], 404);
         }
-        return response()->json(["message" => "WTF heb jij nou gescand"], 404);
+        return response()->json(["message" => "Het spel is gestopt. Lekker puh!"], 404);
     }
 
     public function getStatus()
     {
         $game = Game::find(1);
-        error_log($game->status);
+        //error_log($game->status);
         return response()->json(["status" => $game->status]);
     }
 

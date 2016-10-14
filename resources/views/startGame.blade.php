@@ -10,6 +10,7 @@
     </form>
     </div>
     <div class="col-md-6">
+        <h2>Eindstand</h2>
         <ul>
             <li>Naam - Score</li>
             @foreach($players as $player)

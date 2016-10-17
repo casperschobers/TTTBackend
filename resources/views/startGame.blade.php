@@ -6,6 +6,12 @@
     <div class="col-md-6">
     <form method="POST" action="{{action('GameController@postStart')}}">
         {!! Form::token() !!}
+        <input type="text" name="min"/> min
+        <br>
+        <br>
+        <input type="text" name="sec"/> sec
+        <br>
+        <br>
         <button class="btn btn-success">Start The Game</button>
     </form>
     </div>

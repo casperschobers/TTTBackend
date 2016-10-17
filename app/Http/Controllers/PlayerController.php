@@ -24,7 +24,11 @@ class PlayerController extends Controller
            $player->number = 1;
            $player->save();
            $newTarget = Target::inRandomOrder()->first();
-           return response()->json(["id" => $player->id, "name" => $player->name, "url" => $newTarget->imageurl]);
+           $dateStart = $game->updated_at;
+           $duration = $game->time;
+           $diff = $dateStart->diffInSeconds(Carbon::now());
+           $remaining = $duration - $diff;
+           return response()->json(["id" => $player->id, "name" => $player->name, "url" => $newTarget->imageurl, "time" => $remaining]);
        }
        return response()->json(["message" => 'De game is op dit moment gestopt. Wacht totdat een nieuwe game begint!'], 412);
    }

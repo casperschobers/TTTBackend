@@ -53,7 +53,10 @@ class GameController extends Controller
                  $player = Player::find($request->id);
                 if (isset($target)) {
                     //error_log($player->score);
-                    $player->score_streak = $player->score_streak + 1;
+                    if( $player->score_streak < 5)
+                    {
+                        $player->score_streak = $player->score_streak + 1;
+                    }
                     $player->score = $player->score + $player->score_streak;
                     //error_log($player->score);
                     $player->save();
@@ -66,9 +69,7 @@ class GameController extends Controller
                 $player->save();
                 return response()->json(["message" => "Kijk nou eens goed... dit lijkt toch niet op het plaatje?!"], 404);
             }
-            $player->score_streak = 0;
-                $player->save();
-            return response()->json(["message" => "Wat heb jij nou weer gescand?"], 404);
+                    return response()->json(["message" => "Wat heb jij nou weer gescand?"], 404);
         }
         return response()->json(["message" => "Het spel is gestopt. Lekker puh!"], 404);
     }

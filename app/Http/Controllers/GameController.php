@@ -47,10 +47,11 @@ class GameController extends Controller
             if (isset($targetid[1]) && isset($request->imageURL)) {
                 $matchThese = ["qrId" => $targetid[1], "imageurl" => $request->imageURL];
                 $target = Target::where($matchThese)->first();
+                 $player = Player::find($request->id);
                 if (isset($target)) {
-                    $player = Player::find($request->id);
                     //error_log($player->score);
-                    $player->score = $player->score + 1;
+                    $player->score_streak = $player->score_streak + 1;
+                    $player->score = $player->score + $player->score_streak;
                     //error_log($player->score);
                     $player->save();
 
@@ -58,8 +59,12 @@ class GameController extends Controller
                     $game->save();
                     return response()->json(["status" => $game->status, "url" => $this->getRandomTarget($target)]);
                 }
+                $player->score_streak = 0;
+                $player->save();
                 return response()->json(["message" => "Kijk nou eens goed... dit lijkt toch niet op het plaatje?!"], 404);
             }
+            $player->score_streak = 0;
+                $player->save();
             return response()->json(["message" => "Wat heb jij nou weer gescand?"], 404);
         }
         return response()->json(["message" => "Het spel is gestopt. Lekker puh!"], 404);

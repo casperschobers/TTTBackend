@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests;
 use stdClass;
 
-class GameController extends Controller
-{
-    public function getGamePage()
-    {
+class GameController extends Controller {
+    
+    public function getGamePage() {
         $game = Game::find(1);
         if ($game->status == 'ended') {
             return view('startGame')->with('players', Player::orderBy('score', 'desc')->get());
@@ -23,8 +22,7 @@ class GameController extends Controller
         return view('endGame')->with('players', Player::orderBy('score', 'desc')->get());
     }
 
-    public function postStart(Request $request)
-    {
+    public function postStart(Request $request) {
         $game = Game::find(1);
         $game->status = 'ready';
         $time = ($request->min * 60) + $request->sec;
@@ -34,16 +32,14 @@ class GameController extends Controller
         return redirect('game');
     }
 
-    public function postEnd()
-    {
+    public function postEnd() {
         $game = Game::find(1);
         $game->status = 'ended';
         $game->save();
         return redirect('game');
     }
 
-    public function postFound(Request $request)
-    {
+    public function postFound(Request $request) {
         $game = Game::find(1);
         if ($game->status != "ended") {
             $targetid = explode("-", $request->qr);
@@ -73,8 +69,7 @@ class GameController extends Controller
         return response()->json(["message" => "Het spel is gestopt. Lekker puh!"], 404);
     }
 
-    public function getStatus()
-    {
+    public function getStatus() {
         $game = Game::find(1);
         if ($this->isIeAlKlaar($game)) {
             $game->status = 'ended';
@@ -84,8 +79,7 @@ class GameController extends Controller
         return response()->json(["status" => $game->status]);
     }
 
-    private function isIeAlKlaar(Game $game)
-    {
+    private function isIeAlKlaar(Game $game) {
         $dateStart = $game->updated_at;
         $duration = $game->time;
         $diff = $dateStart->diffInSeconds(Carbon::now());
@@ -93,8 +87,7 @@ class GameController extends Controller
         return $remaining <= 0;
     }
 
-    private function getRandomTarget($target = null)
-    {
+    private function getRandomTarget($target = null) {
         $newTarget = Target::inRandomOrder()->first();
         while ($target->id == $newTarget->id) {
             $newTarget = Target::inRandomOrder()->first();
@@ -102,8 +95,7 @@ class GameController extends Controller
         return $newTarget->imageurl;
     }
 
-    public function getScore()
-    {
+    public function getScore() {
         $score = array();
         foreach (Player::all() as $player) {
             $pScore = new stdClass;

@@ -27,6 +27,7 @@ class GameController extends Controller {
         $game->status = 'ready';
         $time = ($request->min * 60) + $request->sec;
         $game->time = $time;
+        $game->started = Carbon::now();
         $game->save();
         Player::truncate();
         return redirect('game');
@@ -83,10 +84,12 @@ class GameController extends Controller {
     }
 
     private function isIeAlKlaar(Game $game) {
-        $dateStart = $game->updated_at;
+        $dateStart = Carbon::parse($game->started);
         $duration = $game->time;
         $diff = $dateStart->diffInSeconds(Carbon::now());
+        error_log('d'.$diff);
         $remaining = $duration - $diff;
+        error_log('r'.$remaining);
         return $remaining <= 0;
     }
 

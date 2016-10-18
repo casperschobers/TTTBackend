@@ -22,3 +22,5 @@ Route::post('/start', 'PlayerController@postNumber');
 Route::post('/found', 'GameController@postFound');
 
 Route::get('/status', 'GameController@getStatus');
+
+Route::get('/score', 'GameController@getScore');

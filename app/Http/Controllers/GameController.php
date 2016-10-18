@@ -64,6 +64,9 @@ class GameController extends Controller {
                 $player->save();
                 return response()->json(["message" => "Kijk nou eens goed... dit lijkt toch niet op het plaatje?!"], 404);
             }
+            $player = player::find($request->id);
+            $player->score_streak = 0;
+            $player->save();
             return response()->json(["message" => "Wat heb jij nou weer gescand?"], 404);
         }
         return response()->json(["message" => "Het spel is gestopt. Lekker puh!"], 404);
